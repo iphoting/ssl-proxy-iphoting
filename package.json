@@ -6,6 +6,6 @@
     "node": "^6.11.1"
   },
   "devDependencies": {
-    "coffee-script": "^1.12.6"
+    "coffee-script": "^1.12.7"
   }
 }
