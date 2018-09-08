@@ -3,9 +3,9 @@
   "version": "2.3.0",
   "dependencies": {},
   "engines": {
-    "node": "^6.11.1"
+    "node": "8.x"
   },
   "devDependencies": {
-    "coffee-script": "^1.12.7"
+    "coffeescript": "^2.3.1"
   }
 }
