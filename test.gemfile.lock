@@ -1,14 +1,26 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.3.4)
-    mime-types (1.23)
-    power_assert (0.2.2)
-    rack (2.0.3)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
-    test-unit (3.0.8)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
+    domain_name (0.5.20190701)
+      unf (>= 0.0.5, < 1.0.0)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    mime-types (2.99.3)
+    netrc (0.11.0)
+    power_assert (1.2.0)
+    public_suffix (4.0.4)
+    rack (2.2.2)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    test-unit (3.3.5)
       power_assert
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.7)
 
 PLATFORMS
   ruby
@@ -20,4 +32,4 @@ DEPENDENCIES
   test-unit
 
 BUNDLED WITH
-   1.14.6
+   2.1.3
