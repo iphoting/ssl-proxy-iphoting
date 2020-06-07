@@ -1,11 +1,16 @@
 {
   "name": "camo",
   "version": "2.3.0",
-  "dependencies": {},
+  "dependencies": {
+    "env-cmd": "^10.1"
+  },
   "engines": {
     "node": "8.x"
   },
   "devDependencies": {
-    "coffeescript": "^2.3.1"
+    "coffeescript": "^2.3"
+  },
+  "scripts": {
+    "start": "env-cmd node server.js"
   }
 }
