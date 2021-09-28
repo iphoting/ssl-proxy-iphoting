@@ -1,0 +1,49 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Ruby
+
+on:
+  push:
+    branches: [ heroku ]
+  pull_request:
+    branches: [ heroku ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
+      BUNDLE_GEMFILE: ${{ github.workspace }}/test.gemfile
+      
+    strategy:
+      matrix:
+        ruby-version: ['2.3.4']
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.4.1
+      with:
+        node-version: lts/carbon
+        cache: npm
+    - name: Install deps
+      run: |
+        npm install -g coffee-script
+        gem install rake
+    - name: Run camo server
+      run: |
+        node --version
+        npm --version
+        coffee server.coffee &
+    - name: Run tests
+      run: rake
