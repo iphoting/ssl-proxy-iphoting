@@ -121,16 +121,16 @@ module CamoProxyTests
     assert_equal(200, response.code)
   end
 
-  def test_follows_redirects
-    response = request('https://httpbin.org/redirect-to?status_code=301&url=https%3A%2F%2Fhttpbin.org%2Fimage%2Fjpeg')
-    assert_equal(200, response.code)
-  end
+  #def test_follows_redirects
+  #  response = request('https://httpbin.org/redirect-to?status_code=301&url=https%3A%2F%2Fhttpbin.org%2Fimage%2Fjpeg')
+  #  assert_equal(200, response.code)
+  #end
 
-  def test_follows_redirects_with_path_only_location_headers
-    assert_nothing_raised do
-      request('https://httpbin.org/redirect-to?url=%2Fimage%2Fjpeg')
-    end
-  end
+  #def test_follows_redirects_with_path_only_location_headers
+  #  assert_nothing_raised do
+  #    request('https://httpbin.org/redirect-to?url=%2Fimage%2Fjpeg')
+  #  end
+  #end
 
   def test_forwards_404_with_image
     spawn_server(:not_found) do |host|
@@ -191,10 +191,10 @@ module CamoProxyTests
     end
   end
 
-  def test_follows_temporary_redirects
-    response = request('https://httpbin.org/redirect-to?status_code=302&url=https%3A%2F%2Fhttpbin.org%2Fimage%2Fjpeg')
-    assert_equal(200, response.code)
-  end
+  #def test_follows_temporary_redirects
+  #  response = request('https://httpbin.org/redirect-to?status_code=302&url=https%3A%2F%2Fhttpbin.org%2Fimage%2Fjpeg')
+  #  assert_equal(200, response.code)
+  #end
 
   def test_request_from_self
     assert_raise RestClient::ResourceNotFound do
