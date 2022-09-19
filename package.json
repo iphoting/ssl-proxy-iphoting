@@ -8,7 +8,7 @@
     "node": "8.x"
   },
   "devDependencies": {
-    "coffeescript": "^2.3"
+    "coffeescript": "^2.7"
   },
   "scripts": {
     "start": "env-cmd node server.js"
