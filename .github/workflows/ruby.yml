@@ -9,9 +9,13 @@ name: Ruby
 
 on:
   push:
-    branches: [ heroku ]
+    branches:
+      - heroku
+      - heroku**
   pull_request:
-    branches: [ heroku ]
+    branches:
+      - heroku
+      - heroku**
 
 jobs:
   test:
