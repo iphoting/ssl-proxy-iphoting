@@ -12,10 +12,14 @@ on:
     branches:
       - heroku
       - heroku**
+      - dokku
+      - dokku**
   pull_request:
     branches:
       - heroku
       - heroku**
+      - dokku
+      - dokku**
 
 jobs:
   test:
