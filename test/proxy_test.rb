@@ -42,6 +42,7 @@ module CamoProxyTests
   end
 
   def test_proxy_survives_redirect_without_location
+    omit "media.ebaumsworld.com URL is dead"
     spawn_server(:redirect_without_location) do |host|
       assert_raise RestClient::ResourceNotFound do
         request("http://#{host}")
@@ -80,6 +81,7 @@ module CamoProxyTests
   end
 
   def test_proxy_valid_image_url
+    omit "media.ebaumsworld.com URL is dead"
     response = request('http://media.ebaumsworld.com/picture/Mincemeat/Pimp.jpg')
     assert_equal(200, response.code)
   end
@@ -101,11 +103,13 @@ module CamoProxyTests
   end
 
   def test_proxy_valid_google_chart_url
+    omit "Google Charts API was shut down in 2019"
     response = request('http://chart.apis.google.com/chart?chs=920x200&chxl=0:%7C2010-08-13%7C2010-09-12%7C2010-10-12%7C2010-11-11%7C1:%7C0%7C0%7C0%7C0%7C0%7C0&chm=B,EBF5FB,0,0,0&chco=008Cd6&chls=3,1,0&chg=8.3,20,1,4&chd=s:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&chxt=x,y&cht=lc')
     assert_equal(200, response.code)
   end
 
   def test_proxy_valid_chunked_image_file
+    omit "httpwatch.com URL is dead"
     response = request('https://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx')
     assert_equal(200, response.code)
     assert_nil(response.headers[:content_length])

@@ -5,12 +5,13 @@
     "env-cmd": "^10.1"
   },
   "engines": {
-    "node": "8.x"
+    "node": "22.x"
   },
   "devDependencies": {
     "coffeescript": "^2.7"
   },
   "scripts": {
+    "build": "coffee -c -o . server.coffee",
     "start": "env-cmd node server.js"
   }
 }

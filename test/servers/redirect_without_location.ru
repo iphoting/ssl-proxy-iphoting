@@ -1,6 +1,6 @@
 class ProxyTestServer
   def call(env)
-    [302, {"Content-Type" => "image/foo"}, "test"]
+    [302, {"content-type" => "image/foo"}, "test"]
   end
 end
 

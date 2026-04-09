@@ -83,9 +83,12 @@ process_url = (url, transferredHeaders, resp, remaining_redirects) ->
       port: url.port
       path: queryPath
       headers: transferredHeaders
+      timeout: socket_timeout * 1000
 
     if keep_alive == "false"
       requestOptions['agent'] = false
+
+    responded = false
 
     srcReq = Protocol.get requestOptions, (srcResp) ->
       is_finished = true
@@ -174,20 +177,24 @@ process_url = (url, transferredHeaders, resp, remaining_redirects) ->
             resp.writeHead srcResp.statusCode, newHeaders
             srcResp.pipe resp
 
-    srcReq.setTimeout (socket_timeout * 1000), ->
-      srcReq.abort()
-      four_oh_four resp, "Socket timeout", url
+    srcReq.on 'timeout', ->
+      srcReq.destroy()
+      unless responded
+        responded = true
+        four_oh_four resp, "Socket timeout", url
 
     srcReq.on 'error', (error) ->
-      four_oh_four(resp, "Client Request error #{error.stack}", url)
+      unless responded
+        responded = true
+        four_oh_four(resp, "Client Request error #{error.stack}", url)
 
     resp.on 'close', ->
       error_log("Request aborted")
-      srcReq.abort()
+      srcReq.destroy()
 
     resp.on 'error', (e) ->
       error_log("Request error: #{e}")
-      srcReq.abort()
+      srcReq.destroy()
   else
     four_oh_four(resp, "No host found " + url.host, url)
 

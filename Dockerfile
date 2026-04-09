@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:22-alpine
 
 RUN mkdir -p /opt/camo/
 WORKDIR /opt/camo/
@@ -10,6 +10,6 @@ ADD Procfile /opt/camo/
 
 EXPOSE 8081
 
-RUN npm install
+RUN npm install --omit=dev
 USER nobody
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
