@@ -11,8 +11,6 @@ Camo is an SSL image proxy that prevents mixed content warnings on HTTPS pages. 
 ```bash
 # Build: compile CoffeeScript → JavaScript
 npm run build
-# or via rake:
-rake build
 
 # Install test Ruby dependencies
 rake bundle
@@ -23,9 +21,22 @@ rake
 # Run tests only (requires server already running and bundled)
 BUNDLE_GEMFILE=test.gemfile bundle exec ruby test/proxy_test.rb
 
+# Run a single test by name
+BUNDLE_GEMFILE=test.gemfile bundle exec ruby test/proxy_test.rb --name test_always_sets_security_headers
+
 # Start the server
 CAMO_KEY=0x24FEEDFACEDEADBEEFCAFE npm start
+
+# Docker smoke test (local)
+docker build -t camo:smoke . && docker run -e CAMO_KEY=test-secret-key -p 8081:8081 camo:smoke
 ```
+
+## Runtime Versions
+
+- **Node**: 22 LTS (managed via mise/nvm — see `.nvmrc`)
+- **Ruby**: 3.4.9 (managed via mise — see `.ruby-version`)
+
+To activate Ruby locally: `mise use ruby` in the repo root.
 
 ## Architecture
 
@@ -62,18 +73,33 @@ Special routes: `GET /` → `hwhat`, `GET /favicon.ico` → `ok`, `GET /status` 
 | `CAMO_LOGGING_ENABLED` | `"disabled"` | Set to `"debug"` for verbose logs |
 | `CAMO_KEEP_ALIVE` | `"false"` | HTTP keep-alive |
 
+### Node 22 Compatibility Notes
+
+`server.coffee` uses `request.destroy()` (not the deprecated `abort()`). The socket timeout is set via `requestOptions.timeout` rather than `request.setTimeout()` so it fires even before the TCP connection is established. A `responded` flag prevents `four_oh_four` being called twice when `destroy()` triggers a subsequent error event.
+
 ### Test Infrastructure
 
 Tests are Ruby (Test::Unit) and run integration tests against a live server. Mock backend servers live in `test/servers/` as Rack apps (`.ru` files). The test suite starts these mock servers and exercises the proxy end-to-end.
+
+Several tests are marked `omit` for dead external URLs (Google Charts, ebaumsworld, httpwatch). The `test_404s_on_connect_timeout` test is active and exercises the server's socket timeout path.
 
 `scripts/gen_url.rb` generates valid HMAC-signed Camo URLs for manual testing.
 
 ### URL Signing (for testing)
 
+```bash
+# bash (openssl + xxd)
+KEY="0x24FEEDFACEDEADBEEFCAFE"
+URL="http://example.com/image.jpg"
+DIGEST=$(printf '%s' "$URL" | openssl dgst -sha1 -hmac "$KEY" | awk '{print $NF}')
+HEX_URL=$(printf '%s' "$URL" | xxd -p | tr -d '\n')
+echo "http://localhost:8081/$DIGEST/$HEX_URL"
+```
+
 ```ruby
 require 'openssl'
-key   = ENV['CAMO_KEY']
-url   = 'http://example.com/image.jpg'
+key    = ENV['CAMO_KEY']
+url    = 'http://example.com/image.jpg'
 digest = OpenSSL::HMAC.hexdigest('sha1', key, url)
 hex_url = url.unpack('H*').first
 puts "https://camo-host/#{digest}/#{hex_url}"
